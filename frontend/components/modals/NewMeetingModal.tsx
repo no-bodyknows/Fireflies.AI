@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { X, FileText, Sparkles, Upload, Plus, Trash2, Users, CheckSquare, AlertCircle } from 'lucide-react';
 import { createMeeting } from '@/lib/api';
 import { parseTranscriptText } from '@/lib/utils';
@@ -98,6 +98,35 @@ export default function NewMeetingModal({
   const [error, setError] = useState<string | null>(null);
 
   const { showToast } = useToast();
+
+  const resetForm = useCallback(() => {
+    setTitle('');
+    setDate(getFutureDateTime());
+    setDurationMinutes(30);
+    setAudioUrl('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+    setOverview('');
+    setKeyTopics('');
+    setParticipants([{ name: 'Love Kumar', email: 'love@fireflies.ai' }]);
+    setNewParticipant('');
+    setActionItems([]);
+    setNewTask('');
+    setNewAssignee('');
+    setRawTranscriptText('');
+    setError(null);
+    setActiveTab('form');
+  }, []);
+
+  // Reset form whenever modal is opened
+  useEffect(() => {
+    if (isOpen) {
+      resetForm();
+    }
+  }, [isOpen, resetForm]);
+
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
 
   if (!isOpen) return null;
 
@@ -217,6 +246,7 @@ export default function NewMeetingModal({
 
       await createMeeting(payload);
       showToast('Meeting created successfully!', 'success');
+      resetForm();
       onCreated();
       onClose();
     } catch (err: any) {
@@ -248,7 +278,7 @@ export default function NewMeetingModal({
             </div>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className={`p-1.5 rounded-lg transition-colors shrink-0 ${
               darkMode ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-800' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
             }`}
@@ -565,7 +595,7 @@ export default function NewMeetingModal({
         <div className={`p-4 border-t flex justify-end space-x-2 ${darkMode ? 'border-slate-800 bg-slate-950/40' : 'border-slate-100 bg-slate-50'}`}>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className={`px-4 py-2 rounded-xl text-xs font-medium transition-colors ${
               darkMode ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-600 hover:bg-slate-100'
             }`}
