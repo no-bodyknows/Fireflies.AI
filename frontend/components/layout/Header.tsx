@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { Search, Bell, Sparkles, Plus, Radio, Upload, X, Menu } from 'lucide-react';
+import { Search, Bell, Sparkles, Plus, Radio, X, Menu } from 'lucide-react';
 import { useToast } from '@/components/Toast';
 
 interface HeaderProps {
@@ -94,19 +94,6 @@ export default function Header({
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
           <span className="text-[11px] font-semibold">Fred: Auto-Join Active</span>
-        </button>
-
-        {/* Upload Audio / File button */}
-        <button
-          onClick={onOpenNewMeeting}
-          className={`hidden md:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-colors ${
-            darkMode
-              ? 'border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800'
-              : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
-          }`}
-        >
-          <Upload className="w-3.5 h-3.5 opacity-70" />
-          <span>Upload</span>
         </button>
 
         {/* New Meeting Primary Purple Button */}
