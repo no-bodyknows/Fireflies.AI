@@ -6,7 +6,12 @@ export const metadata: Metadata = {
   title: "Fireflies.ai - AI Meeting Assistant & Transcription",
   description: "Automate your meeting notes. Fireflies records, transcribes, and searches all your voice conversations.",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico" },
+    ],
+    apple: "/icon.svg",
+    shortcut: "/icon.svg",
   },
 };
 
