@@ -63,27 +63,27 @@ export default function ExportModal({ isOpen, onClose, meeting, darkMode }: Expo
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className={`w-full max-w-lg rounded-2xl border shadow-2xl overflow-hidden transition-colors ${
+        className={`w-full max-w-lg mx-auto rounded-2xl border shadow-2xl overflow-hidden max-h-[92vh] flex flex-col transition-colors ${
           darkMode ? 'bg-[#121422] border-slate-800 text-slate-100' : 'bg-white border-slate-200 text-slate-900'
         }`}
       >
-        <div className={`p-5 border-b flex items-center justify-between ${darkMode ? 'border-slate-800' : 'border-slate-100'}`}>
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-lg bg-violet-600/10 text-violet-600 dark:text-violet-400 flex items-center justify-center">
+        <div className={`p-4 sm:p-5 border-b flex items-center justify-between ${darkMode ? 'border-slate-800' : 'border-slate-100'}`}>
+          <div className="flex items-center space-x-2.5 sm:space-x-3 min-w-0 mr-2">
+            <div className="w-8 h-8 rounded-lg bg-violet-600/10 text-violet-600 dark:text-violet-400 flex items-center justify-center shrink-0">
               <Download className="w-4 h-4" />
             </div>
-            <div>
-              <h2 className="text-base font-bold tracking-tight">Export Meeting Notes</h2>
-              <p className={`text-xs ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+            <div className="min-w-0">
+              <h2 className="text-sm sm:text-base font-bold tracking-tight truncate">Export Meeting Notes</h2>
+              <p className={`text-[11px] sm:text-xs truncate ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                 {meeting.title}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className={`p-1.5 rounded-lg transition-colors ${
+            className={`p-1.5 rounded-lg transition-colors shrink-0 ${
               darkMode ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-800' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
             }`}
           >
@@ -91,12 +91,12 @@ export default function ExportModal({ isOpen, onClose, meeting, darkMode }: Expo
           </button>
         </div>
 
-        <div className="p-6 space-y-3">
+        <div className="p-4 sm:p-6 space-y-3 overflow-y-auto">
           <p className={`text-xs ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
             Choose your preferred export format. Includes full AI summary, action items checklist, and timestamped transcripts.
           </p>
 
-          <div className="grid grid-cols-2 gap-3 pt-2">
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3 pt-2">
             <button
               onClick={() => handleDownload('md')}
               className={`p-4 rounded-xl border flex flex-col items-center justify-center text-center space-y-2 transition-all group ${

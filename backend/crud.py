@@ -86,9 +86,9 @@ def create_meeting(db: Session, meeting: schemas.MeetingCreate) -> models.Meetin
             detail="New meetings cannot be created as 'completed'. Newly created meetings must be scheduled as 'upcoming'."
         )
 
-    # Disallow scheduling meetings in the past (allow a 5-minute buffer so scheduling the current/next minute always succeeds)
+    # Disallow scheduling meetings in the past (allow a 10-minute buffer so scheduling the current/next minute always succeeds)
     now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
-    if new_start < now_utc - timedelta(minutes=5):
+    if new_start < now_utc - timedelta(minutes=10):
         raise HTTPException(
             status_code=400,
             detail="Cannot schedule a meeting in the past. Please select a future date and time."

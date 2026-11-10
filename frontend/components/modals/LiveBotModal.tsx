@@ -35,28 +35,28 @@ export default function LiveBotModal({ isOpen, onClose, darkMode }: LiveBotModal
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className={`w-full max-w-lg rounded-2xl border shadow-2xl overflow-hidden transition-colors ${
+        className={`w-full max-w-lg mx-auto rounded-2xl border shadow-2xl overflow-hidden max-h-[92vh] flex flex-col transition-colors ${
           darkMode ? 'bg-[#121422] border-slate-800 text-slate-100' : 'bg-white border-slate-200 text-slate-900'
         }`}
       >
         {/* Header */}
-        <div className={`p-5 border-b flex items-center justify-between ${darkMode ? 'border-slate-800' : 'border-slate-100'}`}>
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-500 text-white flex items-center justify-center shadow-md shadow-indigo-500/20">
+        <div className={`p-4 sm:p-5 border-b flex items-center justify-between ${darkMode ? 'border-slate-800' : 'border-slate-100'}`}>
+          <div className="flex items-center space-x-2.5 sm:space-x-3 min-w-0 mr-2">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-500 text-white flex items-center justify-center shadow-md shadow-indigo-500/20 shrink-0">
               <Bot className="w-5 h-5" />
             </div>
-            <div>
-              <h2 className="text-base font-bold tracking-tight">Add Fred to Live Meeting</h2>
-              <p className={`text-xs ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+            <div className="min-w-0">
+              <h2 className="text-sm sm:text-base font-bold tracking-tight truncate">Add Fred to Live Meeting</h2>
+              <p className={`text-[11px] sm:text-xs truncate ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                 Send Fireflies AI bot to capture and transcribe in real-time
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className={`p-1.5 rounded-lg transition-colors ${
+            className={`p-1.5 rounded-lg transition-colors shrink-0 ${
               darkMode ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-800' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
             }`}
           >
@@ -65,7 +65,7 @@ export default function LiveBotModal({ isOpen, onClose, darkMode }: LiveBotModal
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleJoin} className="p-6 space-y-4">
+        <form onSubmit={handleJoin} className="p-4 sm:p-6 space-y-4 overflow-y-auto">
           <div>
             <label className="block text-xs font-semibold mb-1.5">
               Live Meeting URL <span className="text-violet-500">*</span>
@@ -88,7 +88,7 @@ export default function LiveBotModal({ isOpen, onClose, darkMode }: LiveBotModal
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold mb-1.5">Bot Display Name</label>
               <input

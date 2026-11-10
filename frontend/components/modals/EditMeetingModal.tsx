@@ -93,23 +93,23 @@ export default function EditMeetingModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className={`w-full max-w-lg rounded-2xl border shadow-2xl overflow-hidden transition-colors ${
+        className={`w-full max-w-lg mx-auto rounded-2xl border shadow-2xl overflow-hidden max-h-[92vh] flex flex-col transition-colors ${
           darkMode ? 'bg-[#121422] border-slate-800 text-slate-100' : 'bg-white border-slate-200 text-slate-900'
         }`}
       >
         {/* Header */}
-        <div className={`p-5 border-b flex items-center justify-between ${darkMode ? 'border-slate-800' : 'border-slate-100'}`}>
-          <div>
-            <h2 className="text-base font-bold tracking-tight">Edit Meeting Details</h2>
-            <p className={`text-xs ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+        <div className={`p-4 sm:p-5 border-b flex items-center justify-between ${darkMode ? 'border-slate-800' : 'border-slate-100'}`}>
+          <div className="min-w-0 mr-2">
+            <h2 className="text-sm sm:text-base font-bold tracking-tight truncate">Edit Meeting Details</h2>
+            <p className={`text-[11px] sm:text-xs truncate ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
               Update title, schedule, lifecycle status, and attendees
             </p>
           </div>
           <button
             onClick={onClose}
-            className={`p-1.5 rounded-lg transition-colors ${
+            className={`p-1.5 rounded-lg transition-colors shrink-0 ${
               darkMode ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-800' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
             }`}
           >
@@ -119,14 +119,14 @@ export default function EditMeetingModal({
 
         {/* Error Alert */}
         {error && (
-          <div className="mx-6 mt-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 text-xs flex items-center space-x-2">
+          <div className="mx-4 sm:mx-6 mt-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 text-xs flex items-center space-x-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 overflow-y-auto">
           <div>
             <label className="block text-xs font-semibold mb-1">Meeting Title</label>
             <input
@@ -140,7 +140,7 @@ export default function EditMeetingModal({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold mb-1">Date & Time</label>
               <input
@@ -210,7 +210,7 @@ export default function EditMeetingModal({
               ))}
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 placeholder="Attendee name..."
@@ -234,7 +234,7 @@ export default function EditMeetingModal({
               <button
                 type="button"
                 onClick={handleAddParticipant}
-                className="p-2 rounded-xl bg-violet-600 hover:bg-violet-700 text-white transition-colors"
+                className="p-2 rounded-xl bg-violet-600 hover:bg-violet-700 text-white transition-colors flex items-center justify-center shrink-0"
               >
                 <Plus className="w-4 h-4" />
               </button>

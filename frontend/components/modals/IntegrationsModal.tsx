@@ -31,22 +31,22 @@ export default function IntegrationsModal({ isOpen, onClose, darkMode }: Integra
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className={`w-full max-w-2xl rounded-2xl border shadow-2xl overflow-hidden transition-colors ${
+        className={`w-full max-w-2xl mx-auto rounded-2xl border shadow-2xl overflow-hidden max-h-[92vh] flex flex-col transition-colors ${
           darkMode ? 'bg-[#121422] border-slate-800 text-slate-100' : 'bg-white border-slate-200 text-slate-900'
         }`}
       >
-        <div className={`p-5 border-b flex items-center justify-between ${darkMode ? 'border-slate-800' : 'border-slate-100'}`}>
-          <div>
-            <h2 className="text-base font-bold tracking-tight">Apps & Integrations</h2>
-            <p className={`text-xs ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+        <div className={`p-4 sm:p-5 border-b flex items-center justify-between ${darkMode ? 'border-slate-800' : 'border-slate-100'}`}>
+          <div className="min-w-0 mr-2">
+            <h2 className="text-sm sm:text-base font-bold tracking-tight truncate">Apps & Integrations</h2>
+            <p className={`text-[11px] sm:text-xs truncate ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
               Connect Fireflies to your daily video platforms, CRM, and team apps
             </p>
           </div>
           <button
             onClick={onClose}
-            className={`p-1.5 rounded-lg transition-colors ${
+            className={`p-1.5 rounded-lg transition-colors shrink-0 ${
               darkMode ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-800' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
             }`}
           >
@@ -54,7 +54,7 @@ export default function IntegrationsModal({ isOpen, onClose, darkMode }: Integra
           </button>
         </div>
 
-        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[70vh] overflow-y-auto">
+        <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto flex-1">
           {INTEGRATIONS.map((app) => (
             <div
               key={app.name}

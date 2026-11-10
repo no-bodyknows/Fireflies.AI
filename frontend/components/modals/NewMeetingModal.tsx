@@ -66,8 +66,8 @@ export default function NewMeetingModal({
   };
 
   const getMinDateTime = () => {
-    // 5-minute grace buffer so selecting the current or immediate next minute is enabled
-    const d = new Date(Date.now() - 5 * 60 * 1000);
+    // 10-minute grace buffer so selecting the current or immediate next minute is enabled
+    const d = new Date(Date.now() - 10 * 60 * 1000);
     d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
     return d.toISOString().slice(0, 16);
   };
@@ -157,10 +157,10 @@ export default function NewMeetingModal({
       return;
     }
 
-    // Past time meeting validation with 5-minute grace buffer for clock drift & immediate slot selection
+    // Past time meeting validation with 10-minute grace buffer for clock drift & immediate slot selection
     const selectedTimestamp = new Date(date).getTime();
     const nowTimestamp = Date.now();
-    if (selectedTimestamp < nowTimestamp - 5 * 60 * 1000) {
+    if (selectedTimestamp < nowTimestamp - 10 * 60 * 1000) {
       setError('Meeting date and time cannot be in the past. Please select an upcoming date and time.');
       showToast('Cannot schedule a meeting in the past.', 'error');
       return;
@@ -228,28 +228,28 @@ export default function NewMeetingModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className={`w-full max-w-2xl rounded-2xl border shadow-2xl overflow-hidden flex flex-col max-h-[90vh] transition-colors ${
+        className={`w-full max-w-2xl mx-auto rounded-2xl border shadow-2xl overflow-hidden flex flex-col max-h-[92vh] transition-colors ${
           darkMode ? 'bg-[#121422] border-slate-800 text-slate-100' : 'bg-white border-slate-200 text-slate-900'
         }`}
       >
         {/* Header */}
-        <div className={`p-5 border-b flex items-center justify-between ${darkMode ? 'border-slate-800' : 'border-slate-100'}`}>
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-lg bg-violet-600/10 text-violet-600 dark:text-violet-400 flex items-center justify-center">
+        <div className={`p-4 sm:p-5 border-b flex items-center justify-between ${darkMode ? 'border-slate-800' : 'border-slate-100'}`}>
+          <div className="flex items-center space-x-2.5 sm:space-x-3 min-w-0 mr-2">
+            <div className="w-8 h-8 rounded-lg bg-violet-600/10 text-violet-600 dark:text-violet-400 flex items-center justify-center shrink-0">
               <Plus className="w-5 h-5" />
             </div>
-            <div>
-              <h2 className="text-base font-bold tracking-tight">Create New Meeting</h2>
-              <p className={`text-xs ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
-                Add notes manually, import a transcript file, or load an AI template
+            <div className="min-w-0">
+              <h2 className="text-sm sm:text-base font-bold tracking-tight truncate">Create New Meeting</h2>
+              <p className={`text-[11px] sm:text-xs truncate ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                Add notes manually, import a transcript, or load an AI template
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className={`p-1.5 rounded-lg transition-colors ${
+            className={`p-1.5 rounded-lg transition-colors shrink-0 ${
               darkMode ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-800' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
             }`}
           >
@@ -258,7 +258,7 @@ export default function NewMeetingModal({
         </div>
 
         {/* Workflow Tabs */}
-        <div className={`flex border-b px-6 pt-3 space-x-6 text-xs font-semibold ${darkMode ? 'border-slate-800' : 'border-slate-100'}`}>
+        <div className={`flex border-b px-3 sm:px-6 pt-3 space-x-3 sm:space-x-6 text-xs font-semibold overflow-x-auto no-scrollbar ${darkMode ? 'border-slate-800' : 'border-slate-100'}`}>
           {[
             { id: 'form', label: 'Form Entry', icon: FileText },
             { id: 'upload', label: 'Upload / Paste Transcript', icon: Upload },
@@ -270,7 +270,7 @@ export default function NewMeetingModal({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center space-x-2 pb-3 border-b-2 transition-all ${
+                className={`flex items-center space-x-1.5 sm:space-x-2 pb-3 border-b-2 shrink-0 transition-all ${
                   isActive
                     ? 'border-violet-600 text-violet-600 dark:text-violet-400 font-bold'
                     : 'border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
@@ -292,7 +292,7 @@ export default function NewMeetingModal({
         )}
 
         {/* Body Content */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {activeTab === 'templates' && (
             <div className="space-y-3">
               <p className={`text-xs mb-2 ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
@@ -527,14 +527,14 @@ export default function NewMeetingModal({
                   </div>
                 )}
 
-                <div className="flex space-x-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="text"
                     placeholder="Task description..."
                     value={newTask}
                     onChange={(e) => setNewTask(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddActionItem())}
-                    className={`flex-2 px-3 py-1.5 rounded-xl border text-xs focus:outline-none focus:ring-2 focus:ring-violet-500 ${
+                    className={`flex-1 sm:flex-2 px-3 py-1.5 rounded-xl border text-xs focus:outline-none focus:ring-2 focus:ring-violet-500 ${
                       darkMode ? 'bg-slate-900 border-slate-800 text-slate-100' : 'bg-slate-50 border-slate-200'
                     }`}
                   />
@@ -551,7 +551,7 @@ export default function NewMeetingModal({
                   <button
                     type="button"
                     onClick={handleAddActionItem}
-                    className="px-3 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-xs font-semibold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
+                    className="px-3.5 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-xs font-semibold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors shrink-0"
                   >
                     Add
                   </button>

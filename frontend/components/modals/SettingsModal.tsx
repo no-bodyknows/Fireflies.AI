@@ -24,16 +24,24 @@ export default function SettingsModal({ isOpen, onClose, darkMode }: SettingsMod
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className={`w-full max-w-2xl rounded-2xl border shadow-2xl overflow-hidden flex flex-col md:flex-row transition-colors ${
+        className={`w-full max-w-2xl mx-auto rounded-2xl border shadow-2xl overflow-hidden max-h-[92vh] flex flex-col md:flex-row transition-colors ${
           darkMode ? 'bg-[#121422] border-slate-800 text-slate-100' : 'bg-white border-slate-200 text-slate-900'
         }`}
       >
         {/* Left Nav */}
-        <div className={`w-full md:w-48 p-4 border-b md:border-b-0 md:border-r ${darkMode ? 'border-slate-800 bg-slate-950/40' : 'border-slate-100 bg-slate-50'}`}>
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 px-2">Settings</h3>
-          <nav className="space-y-1">
+        <div className={`w-full md:w-48 p-3 sm:p-4 border-b md:border-b-0 md:border-r shrink-0 ${darkMode ? 'border-slate-800 bg-slate-950/40' : 'border-slate-100 bg-slate-50'}`}>
+          <div className="flex md:flex-col justify-between items-center md:items-stretch mb-2 md:mb-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">Settings</h3>
+            <button
+              onClick={onClose}
+              className={`p-1.5 rounded-lg md:hidden ${darkMode ? 'text-slate-400 hover:text-slate-200' : 'text-slate-400 hover:text-slate-600'}`}
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          <nav className="flex md:flex-col overflow-x-auto no-scrollbar space-x-1 md:space-x-0 md:space-y-1">
             {[
               { id: 'notetaker', label: 'Notetaker Rules', icon: Sliders },
               { id: 'profile', label: 'Profile & Team', icon: User },
@@ -46,7 +54,7 @@ export default function SettingsModal({ isOpen, onClose, darkMode }: SettingsMod
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`w-full flex items-center space-x-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-xl text-xs font-medium shrink-0 transition-all ${
                     isActive
                       ? 'bg-violet-600 text-white shadow-sm'
                       : darkMode
@@ -63,9 +71,9 @@ export default function SettingsModal({ isOpen, onClose, darkMode }: SettingsMod
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 flex flex-col justify-between">
-          <div className="p-6 space-y-4">
-            <div className="flex justify-between items-center mb-2">
+        <div className="flex-1 flex flex-col justify-between overflow-y-auto">
+          <div className="p-4 sm:p-6 space-y-4">
+            <div className="hidden md:flex justify-between items-center mb-2">
               <h2 className="text-sm font-bold tracking-tight capitalize">{activeTab} Preferences</h2>
               <button
                 onClick={onClose}
