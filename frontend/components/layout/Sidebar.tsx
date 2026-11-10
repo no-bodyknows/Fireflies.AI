@@ -33,6 +33,9 @@ interface SidebarProps {
   onOpenLiveBot?: () => void;
   onOpenSettings?: () => void;
   onOpenIntegrations?: () => void;
+  onOpenSoundbites?: () => void;
+  onOpenAnalytics?: () => void;
+  onOpenAskFred?: () => void;
 }
 
 export default function Sidebar({
@@ -43,14 +46,17 @@ export default function Sidebar({
   onOpenLiveBot,
   onOpenSettings,
   onOpenIntegrations,
+  onOpenSoundbites,
+  onOpenAnalytics,
+  onOpenAskFred,
 }: SidebarProps) {
   const pathname = usePathname();
 
   const navLinks: NavItem[] = [
     { label: 'Notebook / Meetings', href: '/', icon: FolderKanban, badge: null },
-    { label: 'AskFred AI', href: '#askfred', icon: Bot, badge: 'AI', isAction: true },
-    { label: 'Soundbites', href: '#soundbites', icon: MessageSquareQuote, badge: null, isAction: true },
-    { label: 'Analytics & Trends', href: '#analytics', icon: BarChart3, badge: null, isAction: true },
+    { label: 'AskFred AI', href: '#askfred', icon: Bot, badge: 'AI', isAction: true, onClick: onOpenAskFred },
+    { label: 'Soundbites', href: '#soundbites', icon: MessageSquareQuote, badge: null, isAction: true, onClick: onOpenSoundbites },
+    { label: 'Analytics & Trends', href: '#analytics', icon: BarChart3, badge: null, isAction: true, onClick: onOpenAnalytics },
     { label: 'Channels', href: '#channels', icon: Radio, badge: 'Soon', isAction: true },
     { label: 'Apps & Integrations', href: '#integrations', icon: Layers, badge: null, onClick: onOpenIntegrations },
     { label: 'Settings', href: '#settings', icon: Sliders, badge: null, onClick: onOpenSettings },
