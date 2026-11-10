@@ -11,7 +11,7 @@ class Meeting(Base):
     date = Column(DateTime, default=datetime.now, nullable=False)
     duration = Column(Integer, default=1800, nullable=False)  # Duration in seconds
     audio_url = Column(String, nullable=True)
-    status = Column(String, default="completed", nullable=False)  # completed, upcoming, delayed, live
+    status = Column(String, default="completed", nullable=False)  # completed, upcoming, missed, live
     created_at = Column(DateTime, default=datetime.now, nullable=False)
 
     participants = relationship("Participant", back_populates="meeting", cascade="all, delete-orphan")

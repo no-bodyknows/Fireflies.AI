@@ -23,7 +23,7 @@ export default function EditMeetingModal({
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [durationMinutes, setDurationMinutes] = useState(30);
-  const [status, setStatus] = useState<'completed' | 'upcoming' | 'delayed' | 'live'>('completed');
+  const [status, setStatus] = useState<'completed' | 'upcoming' | 'missed' | 'delayed' | 'live'>('completed');
   const [participants, setParticipants] = useState<{ name: string; email?: string }[]>([]);
   const [newParticipantName, setNewParticipantName] = useState('');
   const [newParticipantEmail, setNewParticipantEmail] = useState('');
@@ -179,7 +179,7 @@ export default function EditMeetingModal({
             >
               <option value="completed">Completed</option>
               <option value="upcoming">Upcoming</option>
-              <option value="delayed">Delayed</option>
+              <option value="missed">Missed</option>
               <option value="live">Live Now</option>
             </select>
           </div>

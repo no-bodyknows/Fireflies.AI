@@ -30,10 +30,10 @@ export default function MeetingCard({ meeting, onDelete, darkMode }: MeetingCard
         </span>
       );
     }
-    if (s === 'delayed') {
+    if (s === 'missed' || s === 'delayed') {
       return (
         <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-amber-500/15 text-amber-500 border border-amber-500/25">
-          Delayed
+          Missed
         </span>
       );
     }

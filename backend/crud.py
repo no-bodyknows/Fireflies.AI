@@ -21,7 +21,11 @@ def check_and_update_expired_meetings(db: Session):
         m_start = to_utc_naive(m.date)
         m_end = m_start + timedelta(seconds=m.duration)
         if now > m_end:
-            m.status = "completed"
+            # If scheduled time passed without transcripts recorded, mark as missed
+            if not m.transcripts or len(m.transcripts) == 0:
+                m.status = "missed"
+            else:
+                m.status = "completed"
     db.commit()
 
 def get_meetings(
@@ -39,7 +43,11 @@ def get_meetings(
     )
 
     if status and status.lower() != "all":
-        query = query.filter(models.Meeting.status == status.lower())
+        s_val = status.lower()
+        if s_val in ["missed", "delayed"]:
+            query = query.filter(models.Meeting.status.in_(["missed", "delayed"]))
+        else:
+            query = query.filter(models.Meeting.status == s_val)
 
     meetings = query.order_by(models.Meeting.date.desc()).all()
 
@@ -182,13 +190,23 @@ def update_meeting(db: Session, meeting_id: int, data: schemas.MeetingUpdate) ->
 
 def reschedule_meeting(db: Session, meeting_id: int, date: datetime, duration: int, status: str = "upcoming"):
     db_meeting = get_meeting(db, meeting_id)
-    if db_meeting:
-        db_meeting.date = to_utc_naive(date)
-        db_meeting.duration = duration
-        db_meeting.status = status
-        db.commit()
-        db.refresh(db_meeting)
-    return db_meeting
+    if not db_meeting:
+        return None
+
+    new_start = to_utc_naive(date)
+    now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
+    if new_start < now_utc - timedelta(minutes=10):
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot reschedule a meeting in the past. Please select an upcoming date and time."
+        )
+
+    db_meeting.date = new_start
+    db_meeting.duration = duration
+    db_meeting.status = status
+    db.commit()
+    db.refresh(db_meeting)
+    return get_meeting(db, meeting_id)
 
 def patch_meeting_status(db: Session, meeting_id: int, status: str):
     db_meeting = get_meeting(db, meeting_id)

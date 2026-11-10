@@ -40,7 +40,7 @@ export interface Meeting {
   date: string;
   duration: number; // in seconds
   audio_url?: string;
-  status: 'completed' | 'upcoming' | 'delayed' | 'live';
+  status: 'completed' | 'upcoming' | 'missed' | 'delayed' | 'live';
   created_at?: string;
   participants: Participant[];
   transcripts: Transcript[];
@@ -66,5 +66,5 @@ export interface AskFredResponse {
 }
 
 export type ViewMode = 'grid' | 'table';
-export type FilterStatus = 'all' | 'completed' | 'upcoming' | 'delayed';
+export type FilterStatus = 'all' | 'completed' | 'upcoming' | 'missed';
 export type SortOption = 'newest' | 'oldest' | 'duration-desc' | 'duration-asc' | 'title-asc';

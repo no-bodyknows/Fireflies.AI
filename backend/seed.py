@@ -248,7 +248,7 @@ def seed_data():
         date=utc_now() - timedelta(days=1, hours=8),
         duration=2700,  # 45 mins
         audio_url="",
-        status="delayed"
+        status="missed"
     )
     db.add(m6)
     db.commit()
@@ -261,7 +261,7 @@ def seed_data():
         db.add(models.Participant(name=name, email=email, meeting_id=m6.id))
 
     db.add(models.Summary(
-        overview="This security audit was delayed due to an upstream datacenter maintenance window. Awaiting rescheduling with the DevSecOps team.",
+        overview="This security audit was missed due to an upstream datacenter maintenance window. Awaiting rescheduling with the DevSecOps team.",
         key_topics="Infrastructure Security, VPC Peering, Datacenter Latency",
         meeting_id=m6.id
     ))

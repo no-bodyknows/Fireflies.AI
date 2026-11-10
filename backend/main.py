@@ -39,7 +39,7 @@ def root():
 def get_meetings_endpoint(
     search: Optional[str] = Query(None, description="Search by title, overview, transcript, or participant"),
     participant: Optional[str] = Query(None, description="Filter by participant name"),
-    status: Optional[str] = Query(None, description="Filter by status (all, completed, upcoming, delayed, live)"),
+    status: Optional[str] = Query(None, description="Filter by status (all, completed, upcoming, missed, live)"),
     db: Session = Depends(get_db)
 ):
     return crud.get_meetings(db=db, search=search, participant=participant, status=status)

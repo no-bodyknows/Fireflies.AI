@@ -94,8 +94,12 @@ function DashboardContent() {
     return meetings
       .filter((m) => {
         // Tab Status Filter
-        if (activeTab !== 'all' && m.status !== activeTab) {
-          return false;
+        if (activeTab !== 'all') {
+          if (activeTab === 'missed') {
+            if (m.status !== 'missed' && m.status !== 'delayed') return false;
+          } else if (m.status !== activeTab) {
+            return false;
+          }
         }
 
         // Participant Dropdown Filter
@@ -215,7 +219,7 @@ function DashboardContent() {
                   { id: 'all', label: 'All Meetings' },
                   { id: 'completed', label: 'Completed' },
                   { id: 'upcoming', label: 'Upcoming' },
-                  { id: 'delayed', label: 'Delayed' },
+                  { id: 'missed', label: 'Missed' },
                 ].map((tab) => (
                   <button
                     key={tab.id}
