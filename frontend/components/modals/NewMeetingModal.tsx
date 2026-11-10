@@ -58,15 +58,24 @@ export default function NewMeetingModal({
 }: NewMeetingModalProps) {
   const [activeTab, setActiveTab] = useState<'form' | 'upload' | 'templates'>('form');
 
-  // Form State
-  const [title, setTitle] = useState('');
-  const [date, setDate] = useState(() => {
+  // Helpers for future date enforcement
+  const getFutureDateTime = () => {
+    const d = new Date(Date.now() + 60 * 60 * 1000); // 1 hour ahead
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0, 16);
+  };
+
+  const getMinDateTime = () => {
     const d = new Date();
     d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
     return d.toISOString().slice(0, 16);
-  });
+  };
+
+  // Form State - new meetings are always scheduled in the future as 'upcoming'
+  const [title, setTitle] = useState('');
+  const [date, setDate] = useState(getFutureDateTime);
   const [durationMinutes, setDurationMinutes] = useState(30);
-  const [status, setStatus] = useState<'completed' | 'upcoming' | 'delayed'>('completed');
+  const [status] = useState<'upcoming'>('upcoming');
   const [audioUrl, setAudioUrl] = useState('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
   const [overview, setOverview] = useState('');
   const [keyTopics, setKeyTopics] = useState('');
@@ -130,6 +139,7 @@ export default function NewMeetingModal({
 
   const handleApplyTemplate = (tpl: typeof SAMPLE_TEMPLATES[0]) => {
     setTitle(tpl.title);
+    setDate(getFutureDateTime());
     setDurationMinutes(Math.round(tpl.duration / 60));
     setParticipants(tpl.participants);
     setOverview(tpl.overview);
@@ -143,6 +153,15 @@ export default function NewMeetingModal({
     e.preventDefault();
     if (!title.trim()) {
       setError('Please provide a meeting title.');
+      return;
+    }
+
+    // Past time meeting validation: Prevent scheduling meetings in the past
+    const selectedTimestamp = new Date(date).getTime();
+    const nowTimestamp = Date.now();
+    if (selectedTimestamp < nowTimestamp - 60000) {
+      setError('Meeting date and time cannot be in the past. Please select an upcoming date and time.');
+      showToast('Cannot schedule a meeting in the past.', 'error');
       return;
     }
 
@@ -363,15 +382,20 @@ export default function NewMeetingModal({
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold mb-1">Date & Time</label>
+                  <label className="block text-xs font-semibold mb-1">
+                    Date & Time <span className="text-violet-500">* (Upcoming)</span>
+                  </label>
                   <input
                     type="datetime-local"
+                    required
+                    min={getMinDateTime()}
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                     className={`w-full px-3 py-2 rounded-xl border text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none ${
                       darkMode ? 'bg-slate-900 border-slate-800 text-slate-100' : 'bg-slate-50 border-slate-200 text-slate-900'
                     }`}
                   />
+                  <p className="text-[10px] text-slate-400 mt-1">Must be a future date/time</p>
                 </div>
 
                 <div>
@@ -390,17 +414,15 @@ export default function NewMeetingModal({
 
                 <div>
                   <label className="block text-xs font-semibold mb-1">Status</label>
-                  <select
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value as any)}
-                    className={`w-full px-3 py-2 rounded-xl border text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none ${
-                      darkMode ? 'bg-slate-900 border-slate-800 text-slate-100' : 'bg-slate-50 border-slate-200 text-slate-900'
+                  <div
+                    className={`px-3 py-2 rounded-xl border text-xs flex items-center space-x-2 ${
+                      darkMode ? 'bg-slate-900 border-slate-800 text-violet-400' : 'bg-slate-50 border-slate-200 text-violet-600'
                     }`}
                   >
-                    <option value="completed">Completed</option>
-                    <option value="upcoming">Upcoming</option>
-                    <option value="delayed">Delayed</option>
-                  </select>
+                    <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse"></span>
+                    <span className="font-bold">Upcoming</span>
+                  </div>
+                  <p className="text-[10px] text-slate-400 mt-1">New meetings are scheduled as upcoming</p>
                 </div>
               </div>
 

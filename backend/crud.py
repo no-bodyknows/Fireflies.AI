@@ -74,7 +74,22 @@ def get_meeting(db: Session, meeting_id: int) -> Optional[models.Meeting]:
 def create_meeting(db: Session, meeting: schemas.MeetingCreate) -> models.Meeting:
     new_start = meeting.date.replace(tzinfo=None) if meeting.date.tzinfo else meeting.date
     new_end = new_start + timedelta(seconds=meeting.duration)
-    meeting_status = meeting.status or "completed"
+    meeting_status = (meeting.status or "upcoming").lower()
+
+    # Reject creating a completed meeting directly
+    if meeting_status == "completed":
+        raise HTTPException(
+            status_code=400,
+            detail="New meetings cannot be created as 'completed'. Newly created meetings must be scheduled as 'upcoming'."
+        )
+
+    # Reject creating meetings in the past (allow 2 min buffer for network latency/clock drift)
+    now = datetime.now()
+    if new_start < now - timedelta(minutes=2):
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot schedule a meeting in the past. Please select a future date and time."
+        )
 
     # Only check conflict if the new meeting is 'upcoming'
     if meeting_status == "upcoming":

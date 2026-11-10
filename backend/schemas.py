@@ -65,7 +65,7 @@ class MeetingBase(BaseModel):
     date: datetime
     duration: int
     audio_url: Optional[str] = None
-    status: Optional[str] = "completed"
+    status: Optional[str] = "upcoming"
 
 class MeetingCreate(MeetingBase):
     participants: List[ParticipantCreate] = []
