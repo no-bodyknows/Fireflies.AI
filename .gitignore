@@ -1,0 +1,32 @@
+# Node dependencies and build
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# Python virtual environment and cache
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# SQLite temporary files (keep fireflies.db if desired, or exclude)
+*.db-journal
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
