@@ -1,16 +1,17 @@
 'use client';
 import Link from 'next/link';
 import { Meeting } from '@/types';
-import { Calendar, Clock, Users, Trash2, ArrowUpRight, CheckSquare, Sparkles } from 'lucide-react';
+import { Calendar, Clock, Users, Trash2, ArrowUpRight, CheckSquare, Sparkles, CalendarSync } from 'lucide-react';
 import { formatDate, formatDuration, getInitials, getSpeakerStyle } from '@/lib/utils';
 
 interface MeetingCardProps {
   meeting: Meeting;
   onDelete: (id: number) => void;
+  onReschedule?: (meeting: Meeting) => void;
   darkMode: boolean;
 }
 
-export default function MeetingCard({ meeting, onDelete, darkMode }: MeetingCardProps) {
+export default function MeetingCard({ meeting, onDelete, onReschedule, darkMode }: MeetingCardProps) {
   const completedActions = meeting.action_items?.filter((a) => a.is_completed).length || 0;
   const totalActions = meeting.action_items?.length || 0;
 
@@ -129,6 +130,22 @@ export default function MeetingCard({ meeting, onDelete, darkMode }: MeetingCard
                 <span>{completedActions}/{totalActions}</span>
               </span>
             )}
+
+            {(meeting.status === 'missed' || meeting.status === 'delayed') && onReschedule && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onReschedule(meeting);
+                }}
+                className="flex items-center space-x-1 px-2 py-0.5 rounded-lg text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/25 transition-colors"
+                title="Reschedule this missed meeting"
+              >
+                <CalendarSync className="w-3 h-3" />
+                <span>Reschedule</span>
+              </button>
+            )}
+
             <Link
               href={`/meetings/${meeting.id}`}
               className="flex items-center space-x-1 text-xs font-semibold text-violet-600 dark:text-violet-400 hover:underline"

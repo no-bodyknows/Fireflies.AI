@@ -1,16 +1,17 @@
 'use client';
 import Link from 'next/link';
 import { Meeting } from '@/types';
-import { Calendar, Clock, Trash2, ArrowUpRight, CheckSquare } from 'lucide-react';
+import { Calendar, Clock, Trash2, ArrowUpRight, CheckSquare, CalendarSync } from 'lucide-react';
 import { formatDate, formatDuration, getInitials, getSpeakerStyle } from '@/lib/utils';
 
 interface MeetingRowProps {
   meeting: Meeting;
   onDelete: (id: number) => void;
+  onReschedule?: (meeting: Meeting) => void;
   darkMode: boolean;
 }
 
-export default function MeetingRow({ meeting, onDelete, darkMode }: MeetingRowProps) {
+export default function MeetingRow({ meeting, onDelete, onReschedule, darkMode }: MeetingRowProps) {
   const completedActions = meeting.action_items?.filter((a) => a.is_completed).length || 0;
   const totalActions = meeting.action_items?.length || 0;
 
@@ -105,6 +106,16 @@ export default function MeetingRow({ meeting, onDelete, darkMode }: MeetingRowPr
 
         {/* Links & Delete */}
         <div className="flex items-center space-x-1 sm:space-x-2">
+          {(meeting.status === 'missed' || meeting.status === 'delayed') && onReschedule && (
+            <button
+              onClick={() => onReschedule(meeting)}
+              className="flex items-center space-x-1 px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/25 transition-colors shrink-0"
+              title="Reschedule this missed meeting"
+            >
+              <CalendarSync className="w-3 h-3" />
+              <span className="hidden sm:inline">Reschedule</span>
+            </button>
+          )}
           <Link
             href={`/meetings/${meeting.id}`}
             className="px-2 sm:px-2.5 py-1 rounded-lg text-xs font-semibold text-violet-600 dark:text-violet-400 hover:bg-violet-500/10 transition-colors shrink-0"

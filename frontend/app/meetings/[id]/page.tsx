@@ -12,6 +12,7 @@ import ExportModal from '@/components/modals/ExportModal';
 import LiveBotModal from '@/components/modals/LiveBotModal';
 import SettingsModal from '@/components/modals/SettingsModal';
 import IntegrationsModal from '@/components/modals/IntegrationsModal';
+import RescheduleModal from '@/components/modals/RescheduleModal';
 import { ToastProvider, useToast } from '@/components/Toast';
 import { Meeting, ActionItem } from '@/types';
 import { fetchMeeting, deleteMeeting } from '@/lib/api';
@@ -30,7 +31,8 @@ import {
   ExternalLink,
   Menu,
   BookOpen,
-  MessageSquare
+  MessageSquare,
+  CalendarSync
 } from 'lucide-react';
 
 function MeetingDetailContent() {
@@ -54,6 +56,7 @@ function MeetingDetailContent() {
   const [isAskFredOpen, setIsAskFredOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
   const [isLiveBotOpen, setIsLiveBotOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isIntegrationsOpen, setIsIntegrationsOpen] = useState(false);
@@ -222,6 +225,18 @@ function MeetingDetailContent() {
 
           {/* Action Toolbar */}
           <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+            {/* Reschedule Button if Missed */}
+            {(meeting.status === 'missed' || meeting.status === 'delayed') && (
+              <button
+                onClick={() => setIsRescheduleOpen(true)}
+                className="flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/25 transition-all shadow-xs"
+                title="Reschedule this missed meeting"
+              >
+                <CalendarSync className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Reschedule</span>
+              </button>
+            )}
+
             {/* AskFred Button */}
             <button
               onClick={() => setIsAskFredOpen(true)}
@@ -307,6 +322,24 @@ function MeetingDetailContent() {
             <span>Audio & Transcript</span>
           </button>
         </div>
+
+        {/* Missed Meeting Reschedule Banner */}
+        {(meeting.status === 'missed' || meeting.status === 'delayed') && (
+          <div className={`mx-3 sm:mx-6 mt-3 sm:mt-4 p-3 rounded-2xl border flex items-center justify-between gap-3 text-xs ${
+            darkMode ? 'bg-amber-500/10 border-amber-500/25 text-amber-300' : 'bg-amber-50 border-amber-200 text-amber-800'
+          }`}>
+            <div className="flex items-center space-x-2 min-w-0">
+              <CalendarSync className="w-4 h-4 text-amber-500 shrink-0" />
+              <span className="truncate font-medium">This meeting was missed. You can reschedule it to a new upcoming slot.</span>
+            </div>
+            <button
+              onClick={() => setIsRescheduleOpen(true)}
+              className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shrink-0 transition-colors shadow-xs"
+            >
+              Reschedule Now
+            </button>
+          </div>
+        )}
 
         {/* Desktop Split Workspace (>= lg) */}
         <div className="hidden lg:grid flex-1 overflow-hidden p-6 grid-cols-12 gap-5">
@@ -415,6 +448,15 @@ function MeetingDetailContent() {
         onClose={() => setIsEditOpen(false)}
         meeting={meeting}
         onUpdated={(updated) => setMeeting(updated)}
+        darkMode={darkMode}
+      />
+
+      {/* Reschedule Missed Meeting Modal */}
+      <RescheduleModal
+        isOpen={isRescheduleOpen}
+        meeting={meeting}
+        onClose={() => setIsRescheduleOpen(false)}
+        onRescheduled={(updated) => setMeeting(updated)}
         darkMode={darkMode}
       />
 

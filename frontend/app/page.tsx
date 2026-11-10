@@ -9,6 +9,7 @@ import NewMeetingModal from '@/components/modals/NewMeetingModal';
 import LiveBotModal from '@/components/modals/LiveBotModal';
 import SettingsModal from '@/components/modals/SettingsModal';
 import IntegrationsModal from '@/components/modals/IntegrationsModal';
+import RescheduleModal from '@/components/modals/RescheduleModal';
 import { ToastProvider, useToast } from '@/components/Toast';
 import { Meeting, FilterStatus, ViewMode, SortOption } from '@/types';
 import { fetchMeetings, deleteMeeting } from '@/lib/api';
@@ -45,6 +46,7 @@ function DashboardContent() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isIntegrationsOpen, setIsIntegrationsOpen] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [reschedulingMeeting, setReschedulingMeeting] = useState<Meeting | null>(null);
 
   const { showToast } = useToast();
 
@@ -324,6 +326,7 @@ function DashboardContent() {
                     key={meeting.id}
                     meeting={meeting}
                     onDelete={handleDeleteMeeting}
+                    onReschedule={(m) => setReschedulingMeeting(m)}
                     darkMode={darkMode}
                   />
                 ))}
@@ -337,6 +340,7 @@ function DashboardContent() {
                     key={meeting.id}
                     meeting={meeting}
                     onDelete={handleDeleteMeeting}
+                    onReschedule={(m) => setReschedulingMeeting(m)}
                     darkMode={darkMode}
                   />
                 ))}
@@ -370,6 +374,19 @@ function DashboardContent() {
       <IntegrationsModal
         isOpen={isIntegrationsOpen}
         onClose={() => setIsIntegrationsOpen(false)}
+        darkMode={darkMode}
+      />
+
+      {/* Reschedule Missed Meeting Modal */}
+      <RescheduleModal
+        isOpen={!!reschedulingMeeting}
+        meeting={reschedulingMeeting}
+        onClose={() => setReschedulingMeeting(null)}
+        onRescheduled={(updated) => {
+          setMeetings((prev) => prev.map((m) => (m.id === updated.id ? updated : m)));
+          setReschedulingMeeting(null);
+          loadMeetings();
+        }}
         darkMode={darkMode}
       />
     </div>
