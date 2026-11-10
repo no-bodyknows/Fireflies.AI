@@ -1,5 +1,5 @@
-from pydantic import BaseModel, ConfigDict
-from datetime import datetime
+from pydantic import BaseModel, ConfigDict, field_serializer
+from datetime import datetime, timezone
 from typing import List, Optional
 
 # Participant Schemas
@@ -94,6 +94,13 @@ class MeetingResponse(MeetingBase):
     summary: Optional[SummaryResponse] = None
     action_items: List[ActionItemResponse] = []
     model_config = ConfigDict(from_attributes=True)
+
+    @field_serializer("date", "created_at", when_used="json")
+    def serialize_datetime(self, dt: datetime, _info):
+        if dt.tzinfo is None:
+            # SQLite stores naive UTC; serialize with explicit UTC timezone so browsers parse correctly
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.isoformat()
 
 # AskFred AI Assistant Schemas
 class AskFredQuery(BaseModel):

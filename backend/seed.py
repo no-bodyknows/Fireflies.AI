@@ -1,6 +1,9 @@
 from database import SessionLocal, engine
 import models
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
+
+def utc_now():
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 def seed_data():
     print("Resetting database tables...")
@@ -15,7 +18,7 @@ def seed_data():
     # =========================================================================
     m1 = models.Meeting(
         title="Q4 Product Strategy & Architecture Sync",
-        date=datetime.now() - timedelta(days=2, hours=3),
+        date=utc_now() - timedelta(days=2, hours=3),
         duration=1860,  # 31 mins
         audio_url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
         status="completed"
@@ -24,7 +27,6 @@ def seed_data():
     db.commit()
     db.refresh(m1)
 
-    # Participants
     for name, email in [
         ("Love Kumar", "love@fireflies.ai"),
         ("Sarah Chen", "sarah.chen@techcorp.io"),
@@ -33,7 +35,6 @@ def seed_data():
     ]:
         db.add(models.Participant(name=name, email=email, meeting_id=m1.id))
 
-    # Transcripts (full rich interactive transcript)
     transcripts_1 = [
         ("Love Kumar", 0.0, 8.5, "Good morning team, thanks for hopping on. Today's agenda is finalizing our Q4 architecture roadmap and addressing the transcription pipeline latency."),
         ("Sarah Chen", 9.0, 22.0, "Thanks Love. On the backend, we migrated our ingestion worker to an asynchronous FastAPI microservice. Initial benchmarks show transcript processing time dropped by nearly 40%."),
@@ -53,14 +54,12 @@ def seed_data():
     for spk, st, et, txt in transcripts_1:
         db.add(models.Transcript(speaker=spk, start_time=st, end_time=et, text=txt, meeting_id=m1.id))
 
-    # Summary
     db.add(models.Summary(
         overview="The engineering team aligned on Q4 architecture milestones, reviewing a 40% latency reduction in the transcription pipeline, indexed playback seeking, and successful integration of the AskFred AI assistant.",
         key_topics="FastAPI Microservice Migration, Latency Optimization, Interactive Transcript Seeking, AskFred AI Integration, Export Utilities",
         meeting_id=m1.id
     ))
 
-    # Action Items
     action_items_1 = [
         ("Implement transcript export for Markdown, TXT, and PDF", "Sarah Chen", False),
         ("Verify database indexing on transcript timestamps for audio seeking", "David Miller", True),
@@ -75,7 +74,7 @@ def seed_data():
     # =========================================================================
     m2 = models.Meeting(
         title="Enterprise Client Discovery - GlobalLogistics Corp",
-        date=datetime.now() - timedelta(days=4, hours=6),
+        date=utc_now() - timedelta(days=4, hours=6),
         duration=2100,  # 35 mins
         audio_url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
         status="completed"
@@ -123,7 +122,7 @@ def seed_data():
     # =========================================================================
     m3 = models.Meeting(
         title="Fireflies UI/UX Design Critique & Brand Consistency",
-        date=datetime.now() - timedelta(days=6, hours=1),
+        date=utc_now() - timedelta(days=6, hours=1),
         duration=1500,  # 25 mins
         audio_url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
         status="completed"
@@ -168,7 +167,7 @@ def seed_data():
     # =========================================================================
     m4 = models.Meeting(
         title="Q3 Customer Success Review & Feature Feedback",
-        date=datetime.now() - timedelta(days=9, hours=4),
+        date=utc_now() - timedelta(days=9, hours=4),
         duration=2400,  # 40 mins
         audio_url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
         status="completed"
@@ -212,7 +211,7 @@ def seed_data():
     # =========================================================================
     m5 = models.Meeting(
         title="2027 AI Product Innovation & Autonomous Agents Sync",
-        date=datetime.now() + timedelta(days=2, hours=4),
+        date=utc_now() + timedelta(days=2, hours=4),
         duration=1800,  # 30 mins
         audio_url="",
         status="upcoming"
@@ -246,7 +245,7 @@ def seed_data():
     # =========================================================================
     m6 = models.Meeting(
         title="Cloud Infrastructure Security & Latency Audit",
-        date=datetime.now() - timedelta(days=1, hours=8),
+        date=utc_now() - timedelta(days=1, hours=8),
         duration=2700,  # 45 mins
         audio_url="",
         status="delayed"

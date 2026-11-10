@@ -1,20 +1,26 @@
 from sqlalchemy.orm import Session, joinedload
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from typing import Optional, List
 from fastapi import HTTPException
 import models
 import schemas
 import re
 
+def to_utc_naive(dt: datetime) -> datetime:
+    """Normalize datetime to naive UTC for consistent SQLite storage and comparison."""
+    if dt.tzinfo is not None:
+        return dt.astimezone(timezone.utc).replace(tzinfo=None)
+    # If already naive, assume it's UTC
+    return dt
+
 def check_and_update_expired_meetings(db: Session):
     """Automatically update upcoming meetings whose schedule has passed."""
-    now = datetime.now()
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
     upcoming_meetings = db.query(models.Meeting).filter(models.Meeting.status == "upcoming").all()
     for m in upcoming_meetings:
-        m_start = m.date.replace(tzinfo=None) if m.date.tzinfo else m.date
+        m_start = to_utc_naive(m.date)
         m_end = m_start + timedelta(seconds=m.duration)
         if now > m_end:
-            # If past the end time, mark as completed or delayed
             m.status = "completed"
     db.commit()
 
@@ -37,10 +43,8 @@ def get_meetings(
 
     meetings = query.order_by(models.Meeting.date.desc()).all()
 
-    # Filter in memory for robust multi-field and participant matching
     filtered = []
     for m in meetings:
-        # Search query across title, summary, key topics, transcripts, participants
         if search:
             q = search.lower().strip()
             title_match = q in m.title.lower() if m.title else False
@@ -52,7 +56,6 @@ def get_meetings(
             if not (title_match or overview_match or topics_match or transcript_match or participant_match):
                 continue
 
-        # Participant dropdown filter
         if participant and participant.lower() != "all":
             p_match = any(p.name.strip().lower() == participant.strip().lower() for p in m.participants)
             if not p_match:
@@ -72,31 +75,31 @@ def get_meeting(db: Session, meeting_id: int) -> Optional[models.Meeting]:
     ).filter(models.Meeting.id == meeting_id).first()
 
 def create_meeting(db: Session, meeting: schemas.MeetingCreate) -> models.Meeting:
-    new_start = meeting.date.replace(tzinfo=None) if meeting.date.tzinfo else meeting.date
+    new_start = to_utc_naive(meeting.date)
     new_end = new_start + timedelta(seconds=meeting.duration)
     meeting_status = (meeting.status or "upcoming").lower()
 
-    # Reject creating a completed meeting directly
+    # Disallow creating an already completed meeting directly in the new meeting form
     if meeting_status == "completed":
         raise HTTPException(
             status_code=400,
             detail="New meetings cannot be created as 'completed'. Newly created meetings must be scheduled as 'upcoming'."
         )
 
-    # Reject creating meetings in the past (allow 2 min buffer for network latency/clock drift)
-    now = datetime.now()
-    if new_start < now - timedelta(minutes=2):
+    # Disallow scheduling meetings in the past (allow a 5-minute buffer so scheduling the current/next minute always succeeds)
+    now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
+    if new_start < now_utc - timedelta(minutes=5):
         raise HTTPException(
             status_code=400,
             detail="Cannot schedule a meeting in the past. Please select a future date and time."
         )
 
-    # Only check conflict if the new meeting is 'upcoming'
+    # Participant collision check only among upcoming meetings
     if meeting_status == "upcoming":
         new_participant_names = {p.name.strip().lower() for p in meeting.participants}
         upcoming_meetings = db.query(models.Meeting).filter(models.Meeting.status == "upcoming").all()
         for ex in upcoming_meetings:
-            ex_start = ex.date.replace(tzinfo=None) if ex.date.tzinfo else ex.date
+            ex_start = to_utc_naive(ex.date)
             ex_end = ex_start + timedelta(seconds=ex.duration)
 
             time_overlap = new_start < ex_end and new_end > ex_start
@@ -160,7 +163,7 @@ def update_meeting(db: Session, meeting_id: int, data: schemas.MeetingUpdate) ->
     if data.title is not None:
         db_meeting.title = data.title
     if data.date is not None:
-        db_meeting.date = data.date.replace(tzinfo=None) if data.date.tzinfo else data.date
+        db_meeting.date = to_utc_naive(data.date)
     if data.duration is not None:
         db_meeting.duration = data.duration
     if data.audio_url is not None:
@@ -169,7 +172,6 @@ def update_meeting(db: Session, meeting_id: int, data: schemas.MeetingUpdate) ->
         db_meeting.status = data.status
 
     if data.participants is not None:
-        # Clear existing participants and recreate
         db.query(models.Participant).filter(models.Participant.meeting_id == meeting_id).delete()
         for p in data.participants:
             db.add(models.Participant(name=p.name, email=p.email, meeting_id=meeting_id))
@@ -181,7 +183,7 @@ def update_meeting(db: Session, meeting_id: int, data: schemas.MeetingUpdate) ->
 def reschedule_meeting(db: Session, meeting_id: int, date: datetime, duration: int, status: str = "upcoming"):
     db_meeting = get_meeting(db, meeting_id)
     if db_meeting:
-        db_meeting.date = date.replace(tzinfo=None) if date.tzinfo else date
+        db_meeting.date = to_utc_naive(date)
         db_meeting.duration = duration
         db_meeting.status = status
         db.commit()
@@ -261,7 +263,6 @@ def ask_fred_response(meeting: models.Meeting, question: str) -> schemas.AskFred
     action_items = [f"• {a.task} (Owner: {a.assignee or 'Unassigned'}, Status: {'Done' if a.is_completed else 'Pending'})" for a in meeting.action_items]
     participants = [p.name for p in meeting.participants]
 
-    # Smart response generation based on meeting content
     if any(k in q for k in ["action", "task", "todo", "deliverable", "follow up"]):
         if action_items:
             items_text = "\n".join(action_items)
@@ -300,7 +301,6 @@ def ask_fred_response(meeting: models.Meeting, question: str) -> schemas.AskFred
         actions = ["View detailed analytics", "Review speaker talk-time"]
 
     else:
-        # Match question against transcripts
         matching_snippets = []
         words = [w for w in re.findall(r'\w+', q) if len(w) > 3]
         for t in meeting.transcripts:

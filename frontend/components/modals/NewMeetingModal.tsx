@@ -66,7 +66,8 @@ export default function NewMeetingModal({
   };
 
   const getMinDateTime = () => {
-    const d = new Date();
+    // 5-minute grace buffer so selecting the current or immediate next minute is enabled
+    const d = new Date(Date.now() - 5 * 60 * 1000);
     d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
     return d.toISOString().slice(0, 16);
   };
@@ -156,10 +157,10 @@ export default function NewMeetingModal({
       return;
     }
 
-    // Past time meeting validation: Prevent scheduling meetings in the past
+    // Past time meeting validation with 5-minute grace buffer for clock drift & immediate slot selection
     const selectedTimestamp = new Date(date).getTime();
     const nowTimestamp = Date.now();
-    if (selectedTimestamp < nowTimestamp - 60000) {
+    if (selectedTimestamp < nowTimestamp - 5 * 60 * 1000) {
       setError('Meeting date and time cannot be in the past. Please select an upcoming date and time.');
       showToast('Cannot schedule a meeting in the past.', 'error');
       return;
