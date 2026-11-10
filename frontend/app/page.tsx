@@ -11,6 +11,7 @@ import SettingsModal from '@/components/modals/SettingsModal';
 import IntegrationsModal from '@/components/modals/IntegrationsModal';
 import RescheduleModal from '@/components/modals/RescheduleModal';
 import { ToastProvider, useToast } from '@/components/Toast';
+import { useTheme } from '@/context/ThemeContext';
 import { Meeting, FilterStatus, ViewMode, SortOption } from '@/types';
 import { fetchMeetings, deleteMeeting } from '@/lib/api';
 import { formatDuration } from '@/lib/utils';
@@ -31,7 +32,7 @@ function DashboardContent() {
   const router = useRouter();
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [loading, setLoading] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, setDarkMode } = useTheme();
 
   // Filters & Controls
   const [searchQuery, setSearchQuery] = useState('');

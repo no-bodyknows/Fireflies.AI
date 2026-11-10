@@ -14,6 +14,7 @@ import SettingsModal from '@/components/modals/SettingsModal';
 import IntegrationsModal from '@/components/modals/IntegrationsModal';
 import RescheduleModal from '@/components/modals/RescheduleModal';
 import { ToastProvider, useToast } from '@/components/Toast';
+import { useTheme } from '@/context/ThemeContext';
 import { Meeting, ActionItem } from '@/types';
 import { fetchMeeting, deleteMeeting } from '@/lib/api';
 import { formatDate, formatDuration, getInitials, getSpeakerStyle } from '@/lib/utils';
@@ -42,7 +43,7 @@ function MeetingDetailContent() {
 
   const [meeting, setMeeting] = useState<Meeting | null>(null);
   const [loading, setLoading] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, setDarkMode } = useTheme();
 
   // Audio Player State
   const [isPlaying, setIsPlaying] = useState(false);
