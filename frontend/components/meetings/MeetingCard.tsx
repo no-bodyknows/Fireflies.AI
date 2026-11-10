@@ -47,7 +47,7 @@ export default function MeetingCard({ meeting, onDelete, darkMode }: MeetingCard
 
   return (
     <div
-      className={`border rounded-2xl p-5 transition-all duration-200 group flex flex-col justify-between hover:shadow-lg ${
+      className={`border rounded-2xl p-4 sm:p-5 transition-all duration-200 group flex flex-col justify-between hover:shadow-lg ${
         darkMode
           ? 'bg-[#121422] border-slate-800 hover:border-violet-500/40 hover:shadow-violet-950/20'
           : 'bg-white border-slate-200/90 hover:border-violet-400 hover:shadow-violet-100/50'
@@ -71,7 +71,7 @@ export default function MeetingCard({ meeting, onDelete, darkMode }: MeetingCard
                   onDelete(meeting.id);
                 }
               }}
-              className="p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 opacity-0 group-hover:opacity-100 transition-all"
+              className="p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 opacity-70 sm:opacity-0 sm:group-hover:opacity-100 hover:!opacity-100 transition-all"
               title="Delete meeting"
             >
               <Trash2 className="w-3.5 h-3.5" />

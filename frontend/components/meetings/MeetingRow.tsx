@@ -47,12 +47,12 @@ export default function MeetingRow({ meeting, onDelete, darkMode }: MeetingRowPr
 
   return (
     <div
-      className={`flex items-center justify-between p-3.5 border-b transition-colors group ${
+      className={`flex items-center justify-between p-3 sm:p-3.5 border-b transition-colors group ${
         darkMode ? 'border-slate-800/80 hover:bg-slate-900/60' : 'border-slate-100 hover:bg-slate-50'
       }`}
     >
-      <div className="flex items-center space-x-4 flex-1 min-w-0 mr-4">
-        <div className="w-2.5 shrink-0">{renderStatusBadge()}</div>
+      <div className="flex items-center space-x-2.5 sm:space-x-4 flex-1 min-w-0 mr-2 sm:mr-4">
+        <div className="shrink-0">{renderStatusBadge()}</div>
         <div className="min-w-0 flex-1">
           <Link
             href={`/meetings/${meeting.id}`}
@@ -66,7 +66,7 @@ export default function MeetingRow({ meeting, onDelete, darkMode }: MeetingRowPr
         </div>
       </div>
 
-      <div className="flex items-center space-x-6 text-xs text-slate-400 shrink-0">
+      <div className="flex items-center space-x-2 sm:space-x-6 text-xs text-slate-400 shrink-0">
         {/* Attendees */}
         <div className="hidden sm:flex items-center -space-x-1.5 overflow-hidden">
           {meeting.participants?.slice(0, 3).map((p, idx) => {
@@ -104,12 +104,13 @@ export default function MeetingRow({ meeting, onDelete, darkMode }: MeetingRowPr
         )}
 
         {/* Links & Delete */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1 sm:space-x-2">
           <Link
             href={`/meetings/${meeting.id}`}
-            className="px-2.5 py-1 rounded-lg text-xs font-semibold text-violet-600 dark:text-violet-400 hover:bg-violet-500/10 transition-colors"
+            className="px-2 sm:px-2.5 py-1 rounded-lg text-xs font-semibold text-violet-600 dark:text-violet-400 hover:bg-violet-500/10 transition-colors shrink-0"
           >
-            Open Notes &rarr;
+            <span className="hidden sm:inline">Open Notes &rarr;</span>
+            <span className="sm:hidden">Notes &rarr;</span>
           </Link>
           <button
             onClick={() => {
@@ -117,12 +118,14 @@ export default function MeetingRow({ meeting, onDelete, darkMode }: MeetingRowPr
                 onDelete(meeting.id);
               }
             }}
-            className="p-1 rounded text-slate-400 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"
+            className="p-1 rounded text-slate-400 hover:text-rose-500 transition-opacity"
             title="Delete meeting"
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>
         </div>
+      </div>
+    </div>
       </div>
     </div>
   );

@@ -171,14 +171,14 @@ function DashboardContent() {
           onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
         />
 
-        <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
-          <div className="max-w-7xl mx-auto space-y-6">
+        <main className="flex-1 p-3 sm:p-6 lg:p-8 overflow-y-auto">
+          <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
             
             {/* Page Title & Stats Banner */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
               <div>
                 <div className="flex items-center space-x-2">
-                  <h1 className="text-2xl font-extrabold tracking-tight">Meetings Notebook</h1>
+                  <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">Meetings Notebook</h1>
                   <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-violet-500/15 text-violet-600 dark:text-violet-400 border border-violet-500/20">
                     {meetings.length} Total
                   </span>
@@ -189,14 +189,14 @@ function DashboardContent() {
               </div>
 
               {/* Quick Stat Badges */}
-              <div className="flex items-center space-x-2 text-xs">
-                <div className={`px-3 py-1.5 rounded-xl border flex items-center space-x-1.5 ${
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                <div className={`px-2.5 sm:px-3 py-1.5 rounded-xl border flex items-center space-x-1.5 ${
                   darkMode ? 'bg-slate-900/60 border-slate-800 text-slate-300' : 'bg-white border-slate-200 text-slate-700'
                 }`}>
                   <Clock className="w-3.5 h-3.5 text-violet-500" />
                   <span>{formatDuration(totalDurationSeconds)} transcribed</span>
                 </div>
-                <div className={`px-3 py-1.5 rounded-xl border flex items-center space-x-1.5 ${
+                <div className={`px-2.5 sm:px-3 py-1.5 rounded-xl border flex items-center space-x-1.5 ${
                   darkMode ? 'bg-slate-900/60 border-slate-800 text-slate-300' : 'bg-white border-slate-200 text-slate-700'
                 }`}>
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
@@ -206,7 +206,7 @@ function DashboardContent() {
             </div>
 
             {/* Filter Tabs & Toolbar */}
-            <div className={`p-3 rounded-2xl border flex flex-col md:flex-row items-center justify-between gap-3 ${
+            <div className={`p-2.5 sm:p-3 rounded-2xl border flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 ${
               darkMode ? 'bg-[#121422] border-slate-800' : 'bg-white border-slate-200/90 shadow-xs'
             }`}>
               {/* Status Tabs */}
@@ -234,12 +234,12 @@ function DashboardContent() {
               </div>
 
               {/* Controls: Participant, Sort, View Switcher */}
-              <div className="flex items-center space-x-2 w-full md:w-auto justify-end">
+              <div className="flex items-center flex-wrap sm:flex-nowrap gap-2 w-full md:w-auto justify-between sm:justify-end">
                 {/* Participant Dropdown */}
                 <select
                   value={selectedParticipant}
                   onChange={(e) => setSelectedParticipant(e.target.value)}
-                  className={`px-3 py-1.5 rounded-xl border text-xs font-medium focus:outline-none ${
+                  className={`flex-1 sm:flex-none px-2.5 sm:px-3 py-1.5 rounded-xl border text-xs font-medium focus:outline-none ${
                     darkMode ? 'bg-slate-900 border-slate-800 text-slate-200' : 'bg-slate-50 border-slate-200 text-slate-700'
                   }`}
                 >
@@ -253,7 +253,7 @@ function DashboardContent() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className={`px-3 py-1.5 rounded-xl border text-xs font-medium focus:outline-none ${
+                  className={`flex-1 sm:flex-none px-2.5 sm:px-3 py-1.5 rounded-xl border text-xs font-medium focus:outline-none ${
                     darkMode ? 'bg-slate-900 border-slate-800 text-slate-200' : 'bg-slate-50 border-slate-200 text-slate-700'
                   }`}
                 >
@@ -265,7 +265,7 @@ function DashboardContent() {
                 </select>
 
                 {/* Grid / List View Toggle */}
-                <div className={`flex items-center p-0.5 rounded-xl border ${darkMode ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-slate-100'}`}>
+                <div className={`flex items-center p-0.5 rounded-xl border shrink-0 ${darkMode ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-slate-100'}`}>
                   <button
                     onClick={() => setViewMode('grid')}
                     className={`p-1.5 rounded-lg transition-colors ${
@@ -278,6 +278,15 @@ function DashboardContent() {
                   <button
                     onClick={() => setViewMode('table')}
                     className={`p-1.5 rounded-lg transition-colors ${
+                      viewMode === 'table' ? 'bg-violet-600 text-white shadow-xs' : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
+                    }`}
+                    title="Table list view"
+                  >
+                    <List className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
                       viewMode === 'table' ? 'bg-violet-600 text-white shadow-xs' : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
                     }`}
                     title="Table list view"
