@@ -44,6 +44,7 @@ function DashboardContent() {
   const [isLiveBotOpen, setIsLiveBotOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isIntegrationsOpen, setIsIntegrationsOpen] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const { showToast } = useToast();
 
@@ -151,6 +152,8 @@ function DashboardContent() {
       <Sidebar
         darkMode={darkMode}
         setDarkMode={setDarkMode}
+        isMobileOpen={isMobileSidebarOpen}
+        onCloseMobile={() => setIsMobileSidebarOpen(false)}
         onOpenLiveBot={() => setIsLiveBotOpen(true)}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenIntegrations={() => setIsIntegrationsOpen(true)}
@@ -165,6 +168,7 @@ function DashboardContent() {
           onOpenNewMeeting={() => setIsNewMeetingOpen(true)}
           onOpenLiveBot={() => setIsLiveBotOpen(true)}
           onOpenSettings={() => setIsSettingsOpen(true)}
+          onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
         />
 
         <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
