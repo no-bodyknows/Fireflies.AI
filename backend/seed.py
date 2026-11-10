@@ -15,7 +15,7 @@ def seed_data():
     # =========================================================================
     m1 = models.Meeting(
         title="Q4 Product Strategy & Architecture Sync",
-        date=datetime.utcnow() - timedelta(days=2, hours=3),
+        date=datetime.now() - timedelta(days=2, hours=3),
         duration=1860,  # 31 mins
         audio_url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
         status="completed"
@@ -75,7 +75,7 @@ def seed_data():
     # =========================================================================
     m2 = models.Meeting(
         title="Enterprise Client Discovery - GlobalLogistics Corp",
-        date=datetime.utcnow() - timedelta(days=4, hours=6),
+        date=datetime.now() - timedelta(days=4, hours=6),
         duration=2100,  # 35 mins
         audio_url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
         status="completed"
@@ -123,7 +123,7 @@ def seed_data():
     # =========================================================================
     m3 = models.Meeting(
         title="Fireflies UI/UX Design Critique & Brand Consistency",
-        date=datetime.utcnow() - timedelta(days=6, hours=1),
+        date=datetime.now() - timedelta(days=6, hours=1),
         duration=1500,  # 25 mins
         audio_url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
         status="completed"
@@ -168,7 +168,7 @@ def seed_data():
     # =========================================================================
     m4 = models.Meeting(
         title="Q3 Customer Success Review & Feature Feedback",
-        date=datetime.utcnow() - timedelta(days=9, hours=4),
+        date=datetime.now() - timedelta(days=9, hours=4),
         duration=2400,  # 40 mins
         audio_url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
         status="completed"
@@ -212,7 +212,7 @@ def seed_data():
     # =========================================================================
     m5 = models.Meeting(
         title="2027 AI Product Innovation & Autonomous Agents Sync",
-        date=datetime.utcnow() + timedelta(days=2, hours=4),
+        date=datetime.now() + timedelta(days=2, hours=4),
         duration=1800,  # 30 mins
         audio_url="",
         status="upcoming"
@@ -246,7 +246,7 @@ def seed_data():
     # =========================================================================
     m6 = models.Meeting(
         title="Cloud Infrastructure Security & Latency Audit",
-        date=datetime.utcnow() - timedelta(days=1, hours=8),
+        date=datetime.now() - timedelta(days=1, hours=8),
         duration=2700,  # 45 mins
         audio_url="",
         status="delayed"

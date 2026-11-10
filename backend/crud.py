@@ -8,7 +8,7 @@ import re
 
 def check_and_update_expired_meetings(db: Session):
     """Automatically update upcoming meetings whose schedule has passed."""
-    now = datetime.utcnow()
+    now = datetime.now()
     upcoming_meetings = db.query(models.Meeting).filter(models.Meeting.status == "upcoming").all()
     for m in upcoming_meetings:
         m_start = m.date.replace(tzinfo=None) if m.date.tzinfo else m.date

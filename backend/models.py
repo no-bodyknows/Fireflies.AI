@@ -8,11 +8,11 @@ class Meeting(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True, nullable=False)
-    date = Column(DateTime, default=datetime.utcnow, nullable=False)
+    date = Column(DateTime, default=datetime.now, nullable=False)
     duration = Column(Integer, default=1800, nullable=False)  # Duration in seconds
     audio_url = Column(String, nullable=True)
     status = Column(String, default="completed", nullable=False)  # completed, upcoming, delayed, live
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=datetime.now, nullable=False)
 
     participants = relationship("Participant", back_populates="meeting", cascade="all, delete-orphan")
     transcripts = relationship("Transcript", back_populates="meeting", cascade="all, delete-orphan", order_by="Transcript.start_time")
