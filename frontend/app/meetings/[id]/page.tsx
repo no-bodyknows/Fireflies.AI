@@ -27,7 +27,10 @@ import {
   Trash2,
   Edit3,
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  Menu,
+  BookOpen,
+  MessageSquare
 } from 'lucide-react';
 
 function MeetingDetailContent() {
@@ -42,6 +45,10 @@ function MeetingDetailContent() {
   // Audio Player State
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
+
+  // Responsive & Mobile State
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [mobileTab, setMobileTab] = useState<'summary' | 'transcript'>('summary');
 
   // Modals & Panels
   const [isAskFredOpen, setIsAskFredOpen] = useState(false);
@@ -161,6 +168,8 @@ function MeetingDetailContent() {
       <Sidebar
         darkMode={darkMode}
         setDarkMode={setDarkMode}
+        isMobileOpen={isMobileSidebarOpen}
+        onCloseMobile={() => setIsMobileSidebarOpen(false)}
         onOpenLiveBot={() => setIsLiveBotOpen(true)}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenIntegrations={() => setIsIntegrationsOpen(true)}
@@ -169,15 +178,26 @@ function MeetingDetailContent() {
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         {/* Top Meeting Header Bar */}
         <header
-          className={`h-16 border-b px-6 flex items-center justify-between sticky top-0 z-20 backdrop-blur-md shrink-0 transition-colors ${
+          className={`h-16 border-b px-3 sm:px-6 flex items-center justify-between sticky top-0 z-20 backdrop-blur-md shrink-0 transition-colors ${
             darkMode ? 'bg-[#0b0d17]/85 border-slate-800/80' : 'bg-white/85 border-slate-200/90'
           }`}
         >
           {/* Back & Title */}
-          <div className="flex items-center space-x-3 min-w-0 mr-4">
+          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 mr-2 sm:mr-4">
+            {/* Mobile Hamburger */}
+            <button
+              onClick={() => setIsMobileSidebarOpen(true)}
+              className={`p-2 rounded-xl border lg:hidden shrink-0 transition-colors ${
+                darkMode ? 'border-slate-800 hover:bg-slate-800 text-slate-300' : 'border-slate-200 hover:bg-slate-100 text-slate-700'
+              }`}
+              title="Open Navigation"
+            >
+              <Menu className="w-4 h-4" />
+            </button>
+
             <Link
               href="/"
-              className={`p-2 rounded-xl border transition-colors ${
+              className={`p-2 rounded-xl border transition-colors shrink-0 ${
                 darkMode ? 'border-slate-800 hover:bg-slate-800 text-slate-300' : 'border-slate-200 hover:bg-slate-100 text-slate-600'
               }`}
               title="Back to Notebook"
@@ -186,46 +206,47 @@ function MeetingDetailContent() {
             </Link>
 
             <div className="min-w-0">
-              <div className="flex items-center space-x-2">
-                <h1 className="text-sm font-bold tracking-tight truncate">{meeting.title}</h1>
-                {renderStatusBadge(meeting.status)}
+              <div className="flex items-center space-x-1.5 sm:space-x-2">
+                <h1 className="text-xs sm:text-sm font-bold tracking-tight truncate max-w-[140px] sm:max-w-xs md:max-w-sm">{meeting.title}</h1>
+                <div className="shrink-0">{renderStatusBadge(meeting.status)}</div>
               </div>
-              <div className="flex items-center space-x-3 text-[11px] text-slate-400 mt-0.5">
+              <div className="flex items-center space-x-2 sm:space-x-3 text-[10px] sm:text-[11px] text-slate-400 mt-0.5 truncate">
                 <span>{formatDate(meeting.date)}</span>
                 <span>•</span>
                 <span>{formatDuration(meeting.duration)}</span>
-                <span>•</span>
-                <span>{meeting.participants?.length || 0} attendees</span>
+                <span className="hidden sm:inline">•</span>
+                <span className="hidden sm:inline">{meeting.participants?.length || 0} attendees</span>
               </div>
             </div>
           </div>
 
           {/* Action Toolbar */}
-          <div className="flex items-center space-x-2 shrink-0">
+          <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
             {/* AskFred Button */}
             <button
               onClick={() => setIsAskFredOpen(true)}
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-violet-600 via-indigo-600 to-pink-500 hover:from-violet-700 hover:to-indigo-700 shadow-md shadow-violet-500/25 transition-all"
+              className="flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-violet-600 via-indigo-600 to-pink-500 hover:from-violet-700 hover:to-indigo-700 shadow-md shadow-violet-500/25 transition-all"
             >
               <Sparkles className="w-3.5 h-3.5" />
-              <span>AskFred AI</span>
+              <span className="hidden sm:inline">AskFred AI</span>
+              <span className="sm:hidden">Fred</span>
             </button>
 
             {/* Export Button */}
             <button
               onClick={() => setIsExportOpen(true)}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-colors ${
+              className={`flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border text-xs font-semibold transition-colors ${
                 darkMode ? 'border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
               }`}
             >
               <Download className="w-3.5 h-3.5 opacity-75" />
-              <span>Export</span>
+              <span className="hidden sm:inline">Export</span>
             </button>
 
             {/* Share Button */}
             <button
               onClick={handleShare}
-              className={`hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-colors ${
+              className={`hidden md:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-colors ${
                 darkMode ? 'border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
               }`}
             >
@@ -255,10 +276,42 @@ function MeetingDetailContent() {
           </div>
         </header>
 
-        {/* Split Screen Workspace Body */}
-        <div className="flex-1 overflow-hidden p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5">
+        {/* Mobile View Switcher (< lg) */}
+        <div className={`lg:hidden flex items-center justify-around border-b px-3 py-2 shrink-0 ${
+          darkMode ? 'bg-[#121422] border-slate-800' : 'bg-slate-100/70 border-slate-200'
+        }`}>
+          <button
+            onClick={() => setMobileTab('summary')}
+            className={`flex-1 py-1.5 px-3 mx-1 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 transition-all ${
+              mobileTab === 'summary'
+                ? 'bg-violet-600 text-white shadow-xs'
+                : darkMode
+                ? 'text-slate-400 hover:text-white'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>AI Notes & Tasks</span>
+          </button>
+          <button
+            onClick={() => setMobileTab('transcript')}
+            className={`flex-1 py-1.5 px-3 mx-1 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 transition-all ${
+              mobileTab === 'transcript'
+                ? 'bg-violet-600 text-white shadow-xs'
+                : darkMode
+                ? 'text-slate-400 hover:text-white'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>Audio & Transcript</span>
+          </button>
+        </div>
+
+        {/* Desktop Split Workspace (>= lg) */}
+        <div className="hidden lg:grid flex-1 overflow-hidden p-6 grid-cols-12 gap-5">
           {/* Left Column: AI Summary & Notes (5 cols) */}
-          <div className="lg:col-span-5 h-full overflow-hidden flex flex-col min-h-0">
+          <div className="col-span-5 h-full overflow-hidden flex flex-col min-h-0">
             <SummaryPanel
               meetingId={meeting.id}
               summary={meeting.summary}
@@ -272,8 +325,7 @@ function MeetingDetailContent() {
           </div>
 
           {/* Right Column: Audio Player & Interactive Transcript (7 cols) */}
-          <div className="lg:col-span-7 h-full overflow-hidden flex flex-col space-y-4 min-h-0">
-            {/* Audio Media Player */}
+          <div className="col-span-7 h-full overflow-hidden flex flex-col space-y-4 min-h-0">
             <AudioPlayer
               audioUrl={meeting.audio_url}
               totalDuration={meeting.duration || 1800}
@@ -285,7 +337,6 @@ function MeetingDetailContent() {
               darkMode={darkMode}
             />
 
-            {/* Interactive Transcript View */}
             <div className="flex-1 overflow-hidden min-h-0">
               <TranscriptView
                 transcripts={meeting.transcripts || []}
@@ -295,6 +346,49 @@ function MeetingDetailContent() {
               />
             </div>
           </div>
+        </div>
+
+        {/* Mobile / Tablet Responsive Workspace (< lg) */}
+        <div className="flex lg:hidden flex-1 overflow-hidden p-3 flex-col space-y-3 min-h-0">
+          {/* Sticky Player at Top for Both Tabs */}
+          <AudioPlayer
+            audioUrl={meeting.audio_url}
+            totalDuration={meeting.duration || 1800}
+            currentTime={currentTime}
+            onTimeUpdate={(t) => setCurrentTime(t)}
+            isPlaying={isPlaying}
+            onPlayPause={() => setIsPlaying(!isPlaying)}
+            onSeek={handleSeek}
+            darkMode={darkMode}
+          />
+
+          {/* Tab 1: AI Summary & Action Items */}
+          {mobileTab === 'summary' && (
+            <div className="flex-1 overflow-hidden min-h-0">
+              <SummaryPanel
+                meetingId={meeting.id}
+                summary={meeting.summary}
+                actionItems={meeting.action_items || []}
+                participants={meeting.participants || []}
+                transcripts={meeting.transcripts || []}
+                onActionItemsChange={(items) => setMeeting({ ...meeting, action_items: items })}
+                onSeek={handleSeek}
+                darkMode={darkMode}
+              />
+            </div>
+          )}
+
+          {/* Tab 2: Interactive Transcript */}
+          {mobileTab === 'transcript' && (
+            <div className="flex-1 overflow-hidden min-h-0">
+              <TranscriptView
+                transcripts={meeting.transcripts || []}
+                currentTime={currentTime}
+                onSeek={handleSeek}
+                darkMode={darkMode}
+              />
+            </div>
+          )}
         </div>
       </div>
 

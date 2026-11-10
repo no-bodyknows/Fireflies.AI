@@ -107,7 +107,7 @@ export default function SummaryPanel({
       }`}
     >
       {/* Header Tabs */}
-      <div className={`flex border-b px-4 pt-3 space-x-6 text-xs font-semibold ${darkMode ? 'border-slate-800 bg-slate-900/30' : 'border-slate-100 bg-slate-50/50'}`}>
+      <div className={`flex border-b px-3 sm:px-4 pt-3 space-x-3 sm:space-x-6 text-xs font-semibold overflow-x-auto no-scrollbar ${darkMode ? 'border-slate-800 bg-slate-900/30' : 'border-slate-100 bg-slate-50/50'}`}>
         {[
           { id: 'summary', label: 'AI Notes & Outline', icon: BookOpen },
           { id: 'actions', label: `Action Items (${completedCount}/${actionItems.length})`, icon: CheckSquare },
@@ -119,7 +119,7 @@ export default function SummaryPanel({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center space-x-1.5 pb-2.5 border-b-2 transition-all ${
+              className={`flex items-center space-x-1.5 pb-2.5 border-b-2 shrink-0 transition-all ${
                 isActive
                   ? 'border-violet-600 text-violet-600 dark:text-violet-400 font-bold'
                   : 'border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
@@ -273,14 +273,14 @@ export default function SummaryPanel({
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
               + Add Custom Action Item
             </span>
-            <div className="flex space-x-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 required
                 placeholder="What needs to be done?..."
                 value={newTask}
                 onChange={(e) => setNewTask(e.target.value)}
-                className={`flex-2 px-3 py-1.5 rounded-xl border text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none ${
+                className={`flex-1 sm:flex-2 px-3 py-1.5 rounded-xl border text-xs focus:ring-2 focus:ring-violet-500 focus:outline-none ${
                   darkMode ? 'bg-slate-900 border-slate-800 text-slate-100' : 'bg-slate-50 border-slate-200'
                 }`}
               />
@@ -307,13 +307,13 @@ export default function SummaryPanel({
 
       {/* Tab 3: Speaker Analytics & Sentiment */}
       {activeTab === 'analytics' && (
-        <div className="flex-1 overflow-y-auto p-5 space-y-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-6">
           {/* Sentiment Breakdown */}
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">
               Sentiment Analysis
             </h3>
-            <div className="grid grid-cols-3 gap-2.5 text-center">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-center">
               <div className="p-3 rounded-xl border border-emerald-500/25 bg-emerald-500/10">
                 <span className="text-base font-extrabold text-emerald-500">76%</span>
                 <p className="text-[10px] text-slate-400 mt-0.5">Positive / Collaborative</p>

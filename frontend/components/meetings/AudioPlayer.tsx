@@ -95,7 +95,7 @@ export default function AudioPlayer({
 
   return (
     <div
-      className={`p-4 rounded-2xl border transition-colors shadow-sm ${
+      className={`p-3 sm:p-4 rounded-2xl border transition-colors shadow-sm ${
         darkMode ? 'bg-[#121422] border-slate-800 text-slate-100' : 'bg-white border-slate-200 text-slate-900'
       }`}
     >
@@ -111,7 +111,7 @@ export default function AudioPlayer({
       />
 
       {/* Progress Scrubber Bar */}
-      <div className="space-y-1.5 mb-3">
+      <div className="space-y-1.5 mb-2 sm:mb-3">
         <div className="relative flex items-center">
           <input
             type="range"
@@ -125,7 +125,7 @@ export default function AudioPlayer({
         </div>
         <div className="flex justify-between items-center text-[10px] font-mono text-slate-400">
           <span>{formatTime(currentTime)}</span>
-          <div className="flex items-center space-x-1">
+          <div className="hidden sm:flex items-center space-x-1">
             {/* Animated Waveform Bars */}
             <div className="flex items-center space-x-0.5 px-2">
               {[40, 70, 30, 90, 60, 100, 45, 80, 50, 65, 85, 30].map((h, i) => (
