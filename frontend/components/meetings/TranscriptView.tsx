@@ -64,10 +64,10 @@ export default function TranscriptView({
     e.stopPropagation();
     if (bookmarkedIds.includes(idx)) {
       setBookmarkedIds(bookmarkedIds.filter((id) => id !== idx));
-      showToast('Soundbite removed from bookmarks', 'info');
+      showToast('Bookmark removed', 'info');
     } else {
       setBookmarkedIds([...bookmarkedIds, idx]);
-      showToast('Saved segment as Soundbite highlight! 🎙️', 'success');
+      showToast('Saved quote to bookmarks! 📌', 'success');
     }
   };
 
@@ -209,7 +209,7 @@ export default function TranscriptView({
                           ? 'text-amber-500 hover:text-amber-600'
                           : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
                       }`}
-                      title={isBookmarked ? 'Remove Soundbite' : 'Save as Soundbite'}
+                      title={isBookmarked ? 'Remove bookmark' : 'Bookmark quote'}
                     >
                       <Bookmark className="w-3.5 h-3.5" fill={isBookmarked ? 'currentColor' : 'none'} />
                     </button>

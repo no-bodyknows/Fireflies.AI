@@ -13,7 +13,6 @@ import LiveBotModal from '@/components/modals/LiveBotModal';
 import SettingsModal from '@/components/modals/SettingsModal';
 import IntegrationsModal from '@/components/modals/IntegrationsModal';
 import RescheduleModal from '@/components/modals/RescheduleModal';
-import SoundbitesModal from '@/components/modals/SoundbitesModal';
 import AnalyticsModal from '@/components/modals/AnalyticsModal';
 import { ToastProvider, useToast } from '@/components/Toast';
 import { useTheme } from '@/context/ThemeContext';
@@ -63,7 +62,6 @@ function MeetingDetailContent() {
   const [isLiveBotOpen, setIsLiveBotOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isIntegrationsOpen, setIsIntegrationsOpen] = useState(false);
-  const [isSoundbitesOpen, setIsSoundbitesOpen] = useState(false);
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
 
   const { showToast } = useToast();
@@ -181,7 +179,6 @@ function MeetingDetailContent() {
         onOpenLiveBot={() => setIsLiveBotOpen(true)}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenIntegrations={() => setIsIntegrationsOpen(true)}
-        onOpenSoundbites={() => setIsSoundbitesOpen(true)}
         onOpenAnalytics={() => setIsAnalyticsOpen(true)}
         onOpenAskFred={() => setIsAskFredOpen(true)}
       />
@@ -484,13 +481,6 @@ function MeetingDetailContent() {
       <IntegrationsModal
         isOpen={isIntegrationsOpen}
         onClose={() => setIsIntegrationsOpen(false)}
-        darkMode={darkMode}
-      />
-
-      {/* Soundbites Library Modal */}
-      <SoundbitesModal
-        isOpen={isSoundbitesOpen}
-        onClose={() => setIsSoundbitesOpen(false)}
         darkMode={darkMode}
       />
 
