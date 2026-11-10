@@ -287,15 +287,6 @@ function DashboardContent() {
                 </div>
               </div>
             </div>
-                      viewMode === 'table' ? 'bg-violet-600 text-white shadow-xs' : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
-                    }`}
-                    title="Table list view"
-                  >
-                    <List className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            </div>
 
             {/* Meetings Display */}
             {loading ? (

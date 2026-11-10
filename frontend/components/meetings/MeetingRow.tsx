@@ -126,7 +126,5 @@ export default function MeetingRow({ meeting, onDelete, darkMode }: MeetingRowPr
         </div>
       </div>
     </div>
-      </div>
-    </div>
   );
 }
